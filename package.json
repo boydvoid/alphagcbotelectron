@@ -1,0 +1,27 @@
+{
+  "name": "alphagcbotelectron",
+  "version": "0.0.1",
+  "description": "AlphaGC chat bot",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robaboyd/alphagcbotelectron.git"
+  },
+  "author": "Bobby Boyd",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/robaboyd/alphagcbotelectron/issues"
+  },
+  "homepage": "https://github.com/robaboyd/alphagcbotelectron#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "dotenv": "^6.0.0",
+    "electron": "^2.0.7",
+    "electron-oauth2": "^3.0.0",
+    "superagent": "^3.8.3",
+    "tmi.js": "^1.2.1"
+  }
+}

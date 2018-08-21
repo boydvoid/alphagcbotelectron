@@ -1,0 +1,17 @@
+
+#twitchConnect{
+    transition: all 2s ease;
+    border-radius: 50px;
+    background-color: #5C1F7A !important;
+    width: 300px;
+    height: 71px;
+}
+.getTwitch{
+    border-radius: 50px;
+    background-color: #5C1F7A !important;
+}
+
+.gotTwitch{
+    background-color: green !important;
+    border-radius: 50px;
+}

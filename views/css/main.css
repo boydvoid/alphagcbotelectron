@@ -1,0 +1,62 @@
+
+body{
+    background-color: #171B1B;
+}
+
+.container-fluid {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.dark{
+    background-color: #171B1B;
+}
+
+
+.dark-light{
+    background-color: #202623;
+}
+
+.wrapper{
+    height: 100%;
+    border-top: 5px solid #2B83C5;
+}
+
+.navbar{
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+}
+
+#chat_embed{
+    margin: 10px;
+}
+
+#windowControls{
+    color: #ffffff;
+    margin-left: 10px;
+    width: 150px;
+}
+
+#min{
+    position: relative;
+    top: -5px;
+}
+
+#minBox:hover{background-color: #373737}
+#maxBox:hover{background-color: #373737}
+#closeBox:hover{background-color: #842A2A}
+
+.controls{
+    float: left;
+    position: relative;
+    font-size: 17px;
+    cursor: pointer;
+    width: 33%;
+    text-align: center;
+    height: 30px;
+}
