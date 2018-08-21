@@ -29,6 +29,36 @@ if (!fs.existsSync('commands.json')) {
     var commands = readCommands;
 }
 
+console.log(commands);
+//add new command
+var newCommand = {
+    "com": "!add",
+    "mes": "newer message ",
+    "canUse": true,
+    "timer": false,
+    "time": 0
+}
+
+//overwrite existing
+for (var i = 0; i < commands.length; i++) {
+    if (commands[i].com == newCommand.com) {
+        commands.pop(commands[i]);
+
+    }
+}
+
+
+//stringify to json
+commands.push(newCommand);
+console.log(commands)
+var data = JSON.stringify(commands, null, 2);
+
+fs.writeFile('commands.json', data, finished_user);
+
+function finished_user(err) {
+    console.log('written to user.json');
+}
+
 
 //create commands list
 var html = "<table class='table-striped table-dark'>";
@@ -36,7 +66,6 @@ for (var i = 0; i < commands.length; i++) {
     html += "<tr>";
     html += "<th class='row'>";
     html += "</th>"
-
     html += "<td>" + commands[i].com + "</td>";
     html += "</tr>";
 
