@@ -3,6 +3,12 @@ body{
     background-color: #171B1B;
 }
 
+.navbar-brand{
+    position: relative;
+    top: -3px;
+    left: -17px;
+}
+
 .container-fluid {
     width: 100%;
     padding-right: 15px;
@@ -15,11 +21,18 @@ body{
 
 .dark{
     background-color: #171B1B;
+    padding: 0px;
 }
 
 
 .dark-light{
     background-color: #202623;
+}
+
+.table-dark{
+    color: #fff;
+    background-color: #171B1B;
+    width: 100%;
 }
 
 .wrapper{
@@ -30,6 +43,7 @@ body{
 .navbar{
     -webkit-user-select: none;
     -webkit-app-region: drag;
+    height: 30px;
 }
 
 #chat_embed{
@@ -40,6 +54,10 @@ body{
     color: #ffffff;
     margin-left: 10px;
     width: 150px;
+    -webkit-app-region: no-drag;
+    position: absolute;
+    top: 0;
+    right: -16px;
 }
 
 #min{
@@ -59,4 +77,5 @@ body{
     width: 33%;
     text-align: center;
     height: 30px;
+    -webkit-app-region: no-drag;
 }

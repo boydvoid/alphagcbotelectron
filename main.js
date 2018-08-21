@@ -6,18 +6,50 @@ var fs = require('fs');
 const BrowserWindow = electron.remote.BrowserWindow;
 
 
-//chat src embed
+//get channel Name
 var getUserName = fs.readFileSync('user.json');
 var channelName = JSON.parse(getUserName);
-console.log(channelName);
+
+
+
+
+//chat src embed
+var getUserName = fs.readFileSync('user.json');
 document.getElementById('chat_embed').src = "http://www.twitch.tv/embed/" + channelName + "/chat"
 
 
+//get commands
+if (!fs.existsSync('commands.json')) {
+    //do something here
+    console.log('no commands file');
+} else {
+    var getCommands = fs.readFileSync('commands.json');
+    var readCommands = JSON.parse(getCommands);
+
+    var commands = readCommands;
+}
+
+
+//create commands list
+var html = "<table class='table-striped table-dark'>";
+for (var i = 0; i < commands.length; i++) {
+    html += "<tr>";
+    html += "<th class='row'>";
+    html += "</th>"
+
+    html += "<td>" + commands[i].com + "</td>";
+    html += "</tr>";
+
+}
+html += "</table>";
+
+document.getElementById("box").innerHTML = html;
+
 //window controls
 var win = BrowserWindow.getFocusedWindow();
-var min = document.getElementById('min');
-var max = document.getElementById('max');
-var close = document.getElementById('close');
+var min = document.getElementById('minBox');
+var max = document.getElementById('maxBox');
+var close = document.getElementById('closeBox');
 
 min.onclick = function () {
     win.minimize();
@@ -50,7 +82,7 @@ var options = {
         username: "alphagcbot",
         password: process.env.password
     },
-    channels: ["#alphagc"]
+    channels: ["#" + channelName]
 };
 
 var client = new tmi.client(options);
@@ -60,14 +92,6 @@ client.connect();
 
 console.log(client.readyState());
 
-var canUse = true;
-
-
-var commands = [
-    { "com": "!learn", "mes": "Wolves are AlphaGC's currency. You get 5 wolf every 10 minutes you watch the stream. You can also earn wolves by dueling someone, !duel [persons name] or doing other minigames like !ffa, !boss, and !Heist. Try them out! ", "canUse": canUse },
-    { "com": "!duel", "mes": "Can't Duel Yet.", "canUse": canUse }
-
-];
 
 client.on("chat", function (channel, user, message, self) {
     // Don't listen to my own messages..
@@ -87,14 +111,13 @@ client.on("chat", function (channel, user, message, self) {
             if (commands[i].com == message) {
 
                 //send out command message
-                client.action("alphagc", commands[i].mes);
+                client.action(channelName, commands[i].mes);
 
                 //set the command use to false, so it cant be used
                 commands[i].canUse = false;
 
             }
         }
-
         //see if the command can't be used, start the timer if it cant
         if (commands[i].canUse == false) {
 

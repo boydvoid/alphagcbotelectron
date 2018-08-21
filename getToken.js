@@ -2,12 +2,13 @@ const electron = require('electron');
 const url = require('url');
 const path = require('path');
 const axios = require('axios');
-
-const BrowserWindow = electron.remote.BrowserWindow;
+const getWindow = electron.remote.BrowserWindow;
+const { app, BrowserWindow } = electron;
 
 var twitchButton = document.getElementById('twitchConnect');
 var fs = require('fs');
 var tokenJSON = fs.existsSync('token.json');
+
 //check for file
 window.onload = function () { checkTwitchButton() }
 
@@ -23,7 +24,7 @@ twitchButton.onclick = function () {
     };
 
     // Build the OAuth consent page URL
-    var authWindow = new BrowserWindow({ width: 800, height: 600, show: false, 'node-integration': false });
+    var authWindow = new getWindow({ width: 800, height: 600, show: false, 'node-integration': false });
     var twitchUrl = 'https://id.twitch.tv/oauth2/authorize?';
     var authUrl = twitchUrl + 'client_id=' + options.client_id + '&response_type=' + options.response_type + '&redirect_uri=' + options.redirect_uri + '&scope=' + options.scopes;
     authWindow.loadURL(authUrl);
@@ -136,6 +137,25 @@ document.getElementById('channelButton').onclick = function () {
     function finished_user(err) {
         console.log('written to user.json');
     }
+
+    //create index window after added name
+    //create new window
+    mainWindow = new BrowserWindow({
+        minWidth: 1280,
+        minHeight: 800,
+        width: 1280,
+        height: 800,
+        frame: false
+    });
+
+    setTimeout(function () {
+        mainWindow.loadURL(url.format({
+            pathname: path.join(__dirname, './views/index.html'),
+            protocol: 'file:',
+            slashes: true
+        }));
+    }, 2000)
+
 
 
 }
