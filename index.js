@@ -15,8 +15,6 @@ let loginWindow;
 app.on('ready', function () {
     //create new window
 
-
-
     //load html file
     if (!fs.existsSync('user.json')) {
         loginWindow = new BrowserWindow({

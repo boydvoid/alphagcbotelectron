@@ -10,13 +10,9 @@ const BrowserWindow = electron.remote.BrowserWindow;
 var getUserName = fs.readFileSync('user.json');
 var channelName = JSON.parse(getUserName);
 
-
-
-
 //chat src embed
 var getUserName = fs.readFileSync('user.json');
 document.getElementById('chat_embed').src = "http://www.twitch.tv/embed/" + channelName + "/chat"
-
 
 //get commands
 if (!fs.existsSync('commands.json')) {
@@ -47,7 +43,6 @@ for (var i = 0; i < commands.length; i++) {
     }
 }
 
-
 //stringify to json
 commands.push(newCommand);
 console.log(commands)
@@ -59,7 +54,6 @@ function finished_user(err) {
     console.log('written to user.json');
 }
 
-
 //create commands list
 var html = "<table class='table-striped table-dark'>";
 for (var i = 0; i < commands.length; i++) {
@@ -68,7 +62,6 @@ for (var i = 0; i < commands.length; i++) {
     html += "</th>"
     html += "<td>" + commands[i].com + "</td>";
     html += "</tr>";
-
 }
 html += "</table>";
 
@@ -90,7 +83,6 @@ max.onclick = function () {
     } else {
         win.unmaximize();
     }
-
 }
 
 close.onclick = function () {
@@ -98,7 +90,6 @@ close.onclick = function () {
 }
 
 //bot connect
-
 var client = new tmi.client(options);
 var options = {
     options: {

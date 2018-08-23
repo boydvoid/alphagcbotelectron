@@ -2,16 +2,33 @@ const electron = require('electron');
 const url = require('url');
 const path = require('path');
 const axios = require('axios');
-const getWindow = electron.remote.BrowserWindow;
-const { app, BrowserWindow } = electron;
-
-var twitchButton = document.getElementById('twitchConnect');
 var fs = require('fs');
-var tokenJSON = fs.existsSync('token.json');
+
+const { app, BrowserWindow } = electron;
+const remote = require('electron').remote;
+var twitchButton = document.getElementById('twitchConnect');
+const mainWindow = electron.remote.BrowserWindow;
+
 
 //check for file
 window.onload = function () { checkTwitchButton() }
 
+//check button function
+var tokenJSON = fs.existsSync('token.json');
+function checkTwitchButton() {
+    if (!tokenJSON) {
+        twitchButton.classList.add('getTwitch');
+        twitchButton.classList.remove('gotTwitch');
+        twitchButton.innerHTML = "Connect to Twitch";
+    } else {
+        twitchButton.classList.remove('getTwitch');
+        twitchButton.classList.add('gotTwitch');
+        twitchButton.innerHTML = "Twitch is Connected!";
+    }
+}
+
+
+//onclick for the connect twitch button
 twitchButton.onclick = function () {
 
     // Your Twitch Applications Credentials
@@ -24,7 +41,7 @@ twitchButton.onclick = function () {
     };
 
     // Build the OAuth consent page URL
-    var authWindow = new getWindow({ width: 800, height: 600, show: false, 'node-integration': false });
+    var authWindow = new mainWindow({ width: 800, height: 600, show: false, 'node-integration': false });
     var twitchUrl = 'https://id.twitch.tv/oauth2/authorize?';
     var authUrl = twitchUrl + 'client_id=' + options.client_id + '&response_type=' + options.response_type + '&redirect_uri=' + options.redirect_uri + '&scope=' + options.scopes;
     authWindow.loadURL(authUrl);
@@ -34,29 +51,29 @@ twitchButton.onclick = function () {
         var raw_code = /code=([^&]*)/.exec(url) || null;
         var code = (raw_code && raw_code.length > 1) ? raw_code[1] : null;
         var error = /\?error=(.+)$/.exec(url);
-
-        if (code || error) {
+        console.log(url);
+        //check for two-factor auth
+        if (url.indexOf("passport.twitch.tv") > -1) {
+            authWindow.loadURL(url);
+        } else if (code) {
             // Close the browser if code found or error
+            requestTwitchToken(options, code);
             authWindow.destroy();
         }
-
-        // If there is a code, proceed to get token from github
-        if (code) {
-            requestTwitchToken(options, code);
-        } else if (error) {
+        // If there is a code, proceed to get token from twitch
+        else if (error) {
             alert('Oops! Something went wrong and we couldn\'t' +
-                'log you in using Github. Please try again.');
+                'log you in using twitch. Please try again.');
         }
     }
 
-    // Handle the response from GitHub - See Update from 4/12/2015
+    // Handle the response from Twitch - See Update from 4/12/2015
 
     authWindow.webContents.on('will-navigate', function (event, url) {
         handleCallback(url);
     });
 
     authWindow.webContents.on('did-get-redirect-request', function (event, oldUrl, newUrl) {
-
         handleCallback(newUrl);
     });
 
@@ -65,6 +82,7 @@ twitchButton.onclick = function () {
         authWindow = null;
     }, false);
 
+    //request token from code received ---------------------------------------------------
     function requestTwitchToken(options, code) {
         axios.post('https://id.twitch.tv/oauth2/token?client_id=o5u7i8tz73y3xet18sddlu4bjzoe6m&client_secret=yggjtqrxrik0pubwzx6jb88mqz3qf6&code=' + code + '&grant_type=authorization_code&redirect_uri=http://localhost')
             .then(function (response, err) {
@@ -91,6 +109,7 @@ twitchButton.onclick = function () {
             });
 
     }
+    //---------------------------------------------------
 
     //get user info
     function getTwitchInfo(token) {
@@ -123,52 +142,36 @@ twitchButton.onclick = function () {
             });
     }
 
+    //Submit Channel Name-------------------------------------------------------------
+    document.getElementById('channelButton').onclick = function () {
+        let indexWindow;
+        var channel = document.getElementById('channelInput').value;
+        var data = JSON.stringify(channel, null, 2);
+        fs.writeFile('user.json', data, finished_user);
+        function finished_user(err) {
+            console.log('written to user.json');
+        }
 
-}
+        //create index window after added name
+        indexWindow = new mainWindow({
+            minWidth: 1280,
+            minHeight: 800,
+            width: 1280,
+            height: 800,
+            frame: false
+        });
 
-
-//channel name button
-
-document.getElementById('channelButton').onclick = function () {
-
-    var channel = document.getElementById('channelInput').value;
-    var data = JSON.stringify(channel, null, 2);
-    fs.writeFile('user.json', data, finished_user);
-    function finished_user(err) {
-        console.log('written to user.json');
-    }
-
-    //create index window after added name
-    //create new window
-    mainWindow = new BrowserWindow({
-        minWidth: 1280,
-        minHeight: 800,
-        width: 1280,
-        height: 800,
-        frame: false
-    });
-
-    setTimeout(function () {
-        mainWindow.loadURL(url.format({
-            pathname: path.join(__dirname, './views/index.html'),
+        indexWindow.loadURL(url.format({
+            pathname: path.join(__dirname, './index.html'),
             protocol: 'file:',
             slashes: true
         }));
-    }, 2000)
 
-
-
-}
-
-//check button function
-function checkTwitchButton() {
-    if (!tokenJSON) {
-        twitchButton.classList.add('getTwitch');
-        twitchButton.classList.remove('gotTwitch');
-        twitchButton.innerHTML = "Connect to Twitch";
-    } else {
-        twitchButton.classList.remove('getTwitch');
-        twitchButton.classList.add('gotTwitch');
-        twitchButton.innerHTML = "Twitch is Connected!";
+        var window = remote.getCurrentWindow();
+        window.close();
     }
+    //------------------------------------------------------------------------
+
 }
+
+

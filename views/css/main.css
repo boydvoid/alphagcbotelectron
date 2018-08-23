@@ -8,6 +8,14 @@ body{
     top: -3px;
 }
 
+.index{
+    display: none;
+}
+
+.login{
+    display: none;
+}
+
 .container-fluid {
     width: 100%;
     padding-right: 15px;
